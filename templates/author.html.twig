@@ -1,0 +1,89 @@
+{# templates/author.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Авторы{% endblock %}
+
+{% block body %}
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addAuthor">
+	Добавить
+</button>
+
+<div class="modal fade" id="addAuthor" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="exampleModalLabel">Автор</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<form>
+					<input type="hidden" name="id" value="0">
+					<label>Имя </label><input type="text" name="author[Name]" class="form-control"><br>
+					<label>Отчество </label><input type="text" name="author[SecondName]" class="form-control"><br>
+					<label>Фамилия </label><input type="text" name="author[Family]" class="form-control"><br>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+				<button type="button" class="btn btn-primary save">Сохранить</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<table class="table main display" id="authors">
+	<thead>
+		<tr>
+			<th scope="col">#</th>
+			<th scope="col">Имя</th>
+			<th scope="col">Отчество</th>
+			<th scope="col">Фамилия</th>
+			<th scope="col">Действия</th>
+		</tr>
+	</thead>
+	<tbody>
+	</tbody>
+</table>
+
+	<script>
+	authors = $('#authors').DataTable({
+		ajax: "/authors/all",
+		paging: false,
+		language: {url: 'https://cdn.datatables.net/plug-ins/1.10.19/i18n/Russian.json'},
+		columnDefs: [{
+				targets: -1,
+				data: null,
+				defaultContent: "<button class='btn edit btn-success' title='Редактировать'>Edit</button> <button class='btn del btn-danger' title='Удалить'>x</button>"
+			}]
+	});
+	
+	$('#addAuthor').on('click', 'button.save',
+		(s) => $.post('/authors/add', $('#addAuthor form').serialize(), (res) => {
+			$('#addAuthor').modal('hide');
+			if('error' in res) alert(res.error);
+			else authors.ajax.reload();
+		}, 'json')
+	);
+	
+	$('#authors').on('click', 'button.edit', (s) => {
+		var data = authors.row($(s.target).parents('tr')).data();
+		var inps = $('#addAuthor form').find('input');
+		for (i in inps) inps[i].value = data[i];						
+		$('#addAuthor').modal();
+	});
+	
+	$('#authors').on('click', 'button.del',
+		(s) => {
+			var data = authors.row($(s.target).parents('tr')).data();
+			if(confirm('Точно удалить?')) $.post('/authors/del', {id: data[0]}, (res) => {
+					$('#addAuthor').modal('hide');
+					if('error' in res) alert(res.error);
+					else authors.ajax.reload();
+				}, 'json');
+		}
+	);
+	</script>
+{% endblock %}

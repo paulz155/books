@@ -1,0 +1,47 @@
+{# templates/base.html.twig #}
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>{% block title %}Books{% endblock %}</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<meta name="description" content="">
+		<meta name="author" content="paul_155">
+
+		<link href="./include/starter-template.css" rel="stylesheet">
+		<link href="./include/bootstrap.min.css" rel="stylesheet">
+		
+		<link href="./include/jquery.dataTables.min.css" rel="stylesheet">
+
+		<script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+		<script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+		<script src="./include/popper.min.js"></script>
+		<script src="./include/bootstrap.min.js"></script>
+		<style>
+			body {font-size: 11pt;}
+			tr.even {background-color: #eee;}
+		</style>
+	</head>
+
+	<body>
+		<nav class="navbar navbar-expand-md navbar-light fixed-top" style="background-color: #e3f2fd;">
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+
+			<div class="collapse navbar-collapse" id="navbarsExampleDefault">
+				<ul class="navbar-nav mr-auto" id='menu'>
+					<li><a class="nav-link" href="/">Книги</a></li>
+					<li><a class="nav-link" href="/authors">Авторы</a></li>
+				</ul>
+			</div>
+			
+		</nav>
+			
+		<main role="main" class="container" id='main' style="height:100%;">
+			{% block body %}{% endblock %}			
+		</main>
+    </body>
+</html>
